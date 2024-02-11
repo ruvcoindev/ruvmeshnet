@@ -1,6 +1,6 @@
 package config
 
-var defaultConfig = ""      // LDFLAGS='-X github.com/ruvcoindev/ruvmeshnet/src/config.defaultConfig=/path/to/config
+var defaultConfig = ""      // LDFLAGS='-X github.com/ruvcoindev/ruvmeshnet/src/config.defaultConfig=/path/to/config'
 var defaultAdminListen = "" // LDFLAGS='-X github.com/ruvcoindev/ruvmeshnet/src/config.defaultAdminListen=unix://path/to/sock'
 
 // Defines which parameters are expected by default for configuration on a
@@ -10,7 +10,7 @@ type platformDefaultParameters struct {
 	// Admin socket
 	DefaultAdminListen string
 
-	// Configuration (used for yggdrasilctl)
+	// Configuration (used for ruvmeshnetctl)
 	DefaultConfigFile string
 
 	// Multicast interfaces

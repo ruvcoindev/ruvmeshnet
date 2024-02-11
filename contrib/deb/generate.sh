@@ -12,7 +12,7 @@ fi
 
 PKGBRANCH=$(basename `git name-rev --name-only HEAD`)
 PKGNAME=$(sh contrib/semver/name.sh)
-PKGVERSION=$(sh contrib/semver/version.sh --bare)
+PKGVERSION=95e4cfe
 PKGARCH=${PKGARCH-amd64}
 PKGFILE=$PKGNAME-$PKGVERSION-$PKGARCH.deb
 PKGREPLACES=ruvmeshnet
