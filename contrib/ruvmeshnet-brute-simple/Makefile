@@ -1,12 +1,12 @@
 .PHONY: all
 
-all: util yggdrasil-brute-multi-curve25519 yggdrasil-brute-multi-ed25519
+all: util ruvmeshnet-brute-multi-curve25519 ruvmeshnet-brute-multi-ed25519
 
 util: util.c
 	gcc -Wall -std=c89 -O3 -c -o util.o util.c
 
-yggdrasil-brute-multi-ed25519: yggdrasil-brute-multi-ed25519.c util.o
-	gcc -Wall -std=c89 -O3 -o yggdrasil-brute-multi-ed25519 -lsodium yggdrasil-brute-multi-ed25519.c util.o
+ruvmeshnet-brute-multi-ed25519: ruvmeshnet-brute-multi-ed25519.c util.o
+	gcc -Wall -std=c89 -O3 -o ruvmeshnet-brute-multi-ed25519 -lsodium ruvmeshnet-brute-multi-ed25519.c util.o
 
-yggdrasil-brute-multi-curve25519: yggdrasil-brute-multi-curve25519.c util.o
-	gcc -Wall -std=c89 -O3 -o yggdrasil-brute-multi-curve25519 -lsodium yggdrasil-brute-multi-curve25519.c util.o
+ruvmeshnet-brute-multi-curve25519: ruvmeshnet-brute-multi-curve25519.c util.o
+	gcc -Wall -std=c89 -O3 -o ruvmeshnet-brute-multi-curve25519 -lsodium ruvmeshnet-brute-multi-curve25519.c util.o

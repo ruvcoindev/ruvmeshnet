@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # This is a lazy script to create a .deb for Debian/Ubuntu. It installs
-# yggdrasil and enables it in systemd. You can give it the PKGARCH= argument
+# ruvmeshnet and enables it in systemd. You can give it the PKGARCH= argument
 # i.e. PKGARCH=i386 sh contrib/deb/generate.sh
 
 if [ `pwd` != `git rev-parse --show-toplevel` ]
@@ -15,14 +15,14 @@ PKGNAME=$(sh contrib/semver/name.sh)
 PKGVERSION=$(sh contrib/semver/version.sh --bare)
 PKGARCH=${PKGARCH-amd64}
 PKGFILE=$PKGNAME-$PKGVERSION-$PKGARCH.deb
-PKGREPLACES=yggdrasil
+PKGREPLACES=ruvmeshnet
 
 if [ $PKGBRANCH = "master" ]; then
-  PKGREPLACES=yggdrasil-develop
+  PKGREPLACES=ruvmeshnet-develop
 fi
 
-GOLDFLAGS="-X github.com/yggdrasil-network/yggdrasil-go/src/config.defaultConfig=/etc/yggdrasil/yggdrasil.conf"
-GOLDFLAGS="${GOLDFLAGS} -X github.com/yggdrasil-network/yggdrasil-go/src/config.defaultAdminListen=unix:///var/run/yggdrasil/yggdrasil.sock"
+GOLDFLAGS="-X github.com/ruvcoindev/ruvmeshnet/src/config.defaultConfig=/etc/ruvmeshnet/ruvmeshnet.conf"
+GOLDFLAGS="${GOLDFLAGS} -X github.com/ruvcoindev/ruvmeshnet/src/config.defaultAdminListen=unix:///var/run/ruvmeshnet/ruvmeshnet.sock"
 
 if [ $PKGARCH = "amd64" ]; then GOARCH=amd64 GOOS=linux ./build -l "${GOLDFLAGS}"
 elif [ $PKGARCH = "i386" ]; then GOARCH=386 GOOS=linux ./build -l "${GOLDFLAGS}"
@@ -44,7 +44,7 @@ mkdir -p /tmp/$PKGNAME/usr/bin/
 mkdir -p /tmp/$PKGNAME/lib/systemd/system/
 
 cat > /tmp/$PKGNAME/debian/changelog << EOF
-Please see https://github.com/yggdrasil-network/yggdrasil-go/
+Please see github.com/ruvcoindev/ruvmeshnet/
 EOF
 echo 9 > /tmp/$PKGNAME/debian/compat
 cat > /tmp/$PKGNAME/debian/control << EOF
@@ -55,22 +55,22 @@ Priority: extra
 Architecture: $PKGARCH
 Replaces: $PKGREPLACES
 Conflicts: $PKGREPLACES
-Maintainer: Neil Alexander <neilalexander@users.noreply.github.com>
-Description: Yggdrasil Network
- Yggdrasil is an early-stage implementation of a fully end-to-end encrypted IPv6
+Maintainer: Neil Alexander <neilalexander@users.noreply.github.com> & ruvcoindev
+Description: RuvChain Mesh Network
+ Ruvmeshnet is an early-stage implementation of a fully end-to-end encrypted IPv6
  network. It is lightweight, self-arranging, supported on multiple platforms and
  allows pretty much any IPv6-capable application to communicate securely with
- other Yggdrasil nodes.
+ other Ruvmeshnet nodes.
 EOF
 cat > /tmp/$PKGNAME/debian/copyright << EOF
-Please see https://github.com/yggdrasil-network/yggdrasil-go/
+Please see https://github.com/ruvcoindev/ruvmeshnet/
 EOF
 cat > /tmp/$PKGNAME/debian/docs << EOF
-Please see https://github.com/yggdrasil-network/yggdrasil-go/
+Please see https://github.com/ruvcoindev/ruvmeshnet/
 EOF
 cat > /tmp/$PKGNAME/debian/install << EOF
-usr/bin/yggdrasil usr/bin
-usr/bin/yggdrasilctl usr/bin
+usr/bin/ruvmeshnet usr/bin
+usr/bin/ruvmeshnetctl usr/bin
 lib/systemd/system/*.service lib/systemd/system
 EOF
 cat > /tmp/$PKGNAME/debian/postinst << EOF
@@ -78,65 +78,65 @@ cat > /tmp/$PKGNAME/debian/postinst << EOF
 
 systemctl daemon-reload
 
-if ! getent group yggdrasil 2>&1 > /dev/null; then
-  groupadd --system --force yggdrasil
+if ! getent group ruvmeshnet 2>&1 > /dev/null; then
+  groupadd --system --force ruvmeshnet
 fi
 
-if [ ! -d /etc/yggdrasil ];
+if [ ! -d /etc/ruvmeshnet ];
 then
-    mkdir -p /etc/yggdrasil
-    chown root:yggdrasil /etc/yggdrasil
-    chmod 750 /etc/yggdrasil
+    mkdir -p /etc/ruvmeshnet
+    chown root:ruvmeshnet /etc/ruvmeshnet
+    chmod 750 /etc/ruvmeshnet
 fi
 
-if [ ! -f /etc/yggdrasil/yggdrasil.conf ];
+if [ ! -f /etc/ruvmeshnet/ruvmeshnet.conf ];
 then
-    test -f /etc/yggdrasil.conf && mv /etc/yggdrasil.conf /etc/yggdrasil/yggdrasil.conf
+    test -f /etc/ruvmeshnet.conf && mv /etc/ruvmeshnet.conf /etc/ruvmeshnet/ruvmeshnet.conf
 fi
 
-if [ -f /etc/yggdrasil/yggdrasil.conf ];
+if [ -f /etc/ruvmeshnet/ruvmeshnet.conf ];
 then
   mkdir -p /var/backups
-  echo "Backing up configuration file to /var/backups/yggdrasil.conf.`date +%Y%m%d`"
-  cp /etc/yggdrasil/yggdrasil.conf /var/backups/yggdrasil.conf.`date +%Y%m%d`
+  echo "Backing up configuration file to /var/backups/ruvmeshnet.conf.`date +%Y%m%d`"
+  cp /etc/ruvmeshnet/ruvmeshnet.conf /var/backups/ruvmeshnet.conf.`date +%Y%m%d`
 
-  echo "Normalising and updating /etc/yggdrasil/yggdrasil.conf"
-  /usr/bin/yggdrasil -useconf -normaliseconf < /var/backups/yggdrasil.conf.`date +%Y%m%d` > /etc/yggdrasil/yggdrasil.conf
+  echo "Normalising and updating /etc/ruvmeshnet/ruvmeshnet.conf"
+  /usr/bin/ruvmeshnet -useconf -normaliseconf < /var/backups/ruvmeshnet.conf.`date +%Y%m%d` > /etc/ruvmeshnet/ruvmeshnet.conf
   
-  chown root:yggdrasil /etc/yggdrasil/yggdrasil.conf
-  chmod 640 /etc/yggdrasil/yggdrasil.conf
+  chown root:ruvmeshnet /etc/ruvmeshnet/ruvmeshnet.conf
+  chmod 640 /etc/ruvmeshnet/ruvmeshnet.conf
 else
-  echo "Generating initial configuration file /etc/yggdrasil/yggdrasil.conf"
-  /usr/bin/yggdrasil -genconf > /etc/yggdrasil/yggdrasil.conf
+  echo "Generating initial configuration file /etc/ruvmeshnet/ruvmeshnet.conf"
+  /usr/bin/ruvmeshnet -genconf > /etc/ruvmeshnet/ruvmeshnet.conf
 
-  chown root:yggdrasil /etc/yggdrasil/yggdrasil.conf
-  chmod 640 /etc/yggdrasil/yggdrasil.conf
+  chown root:ruvmeshnet /etc/ruvmeshnet/ruvmeshnet.conf
+  chmod 640 /etc/ruvmeshnet/ruvmeshnet.conf
 fi
 
-systemctl enable yggdrasil
-systemctl restart yggdrasil
+systemctl enable ruvmeshnet
+systemctl restart ruvmeshnet
 
 exit 0
 EOF
 cat > /tmp/$PKGNAME/debian/prerm << EOF
 #!/bin/sh
 if command -v systemctl >/dev/null; then
-  if systemctl is-active --quiet yggdrasil; then
-    systemctl stop yggdrasil || true
+  if systemctl is-active --quiet ruvmeshnet; then
+    systemctl stop ruvmeshnet || true
   fi
-  systemctl disable yggdrasil || true
+  systemctl disable ruvmeshnet || true
 fi
 EOF
 
-cp yggdrasil /tmp/$PKGNAME/usr/bin/
-cp yggdrasilctl /tmp/$PKGNAME/usr/bin/
-cp contrib/systemd/yggdrasil-default-config.service.debian /tmp/$PKGNAME/lib/systemd/system/yggdrasil-default-config.service
-cp contrib/systemd/yggdrasil.service.debian /tmp/$PKGNAME/lib/systemd/system/yggdrasil.service
+cp ruvmeshnet /tmp/$PKGNAME/usr/bin/
+cp ruvmeshnetctl /tmp/$PKGNAME/usr/bin/
+cp contrib/systemd/ruvmeshnet-default-config.service.debian /tmp/$PKGNAME/lib/systemd/system/ruvmeshnet-default-config.service
+cp contrib/systemd/ruvmeshnet.service.debian /tmp/$PKGNAME/lib/systemd/system/ruvmeshnet.service
 
 tar --no-xattrs -czvf /tmp/$PKGNAME/data.tar.gz -C /tmp/$PKGNAME/ \
-  usr/bin/yggdrasil usr/bin/yggdrasilctl \
-  lib/systemd/system/yggdrasil.service \
-  lib/systemd/system/yggdrasil-default-config.service
+  usr/bin/ruvmeshnet usr/bin/ruvmeshnetctl \
+  lib/systemd/system/ruvmeshnet.service \
+  lib/systemd/system/ruvmeshnet-default-config.service
 tar --no-xattrs -czvf /tmp/$PKGNAME/control.tar.gz -C /tmp/$PKGNAME/debian .
 echo 2.0 > /tmp/$PKGNAME/debian-binary
 
