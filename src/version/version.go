@@ -7,7 +7,7 @@ var buildVersion string
 // from git, or returns "unknown" otherwise.
 func BuildName() string {
 	if buildName == "" {
-		return "unknown"
+		return "phoenix"
 	}
 	return buildName
 }
@@ -16,7 +16,7 @@ func BuildName() string {
 // built from git, or returns "unknown" otherwise.
 func BuildVersion() string {
 	if buildVersion == "" {
-		return "unknown"
+		return "phoenix"
 	}
 	return buildVersion
 }
