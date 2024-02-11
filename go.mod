@@ -1,4 +1,4 @@
-module github.com/yggdrasil-network/yggdrasil-go
+module github.com/ruvcoindev/ruvmeshnet
 
 go 1.20
 
