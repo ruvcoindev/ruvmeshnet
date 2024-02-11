@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"io"
 
-	"golang.org/x/crypto/blake2b"
+	"golang.org/x/crypto/sha3"
 )
 
 // This is the version-specific metadata exchanged at the start of a connection.
@@ -130,7 +130,7 @@ func (m *version_metadata) decode(r io.Reader, password []byte) error {
 		bs = bs[oplen:]
 	}
 
-	hasher, err := blake2b.New512(password)
+	hasher, err := sha3.New512(password)
 	if err != nil {
 		return fmt.Errorf("invalid password supplied")
 	}
