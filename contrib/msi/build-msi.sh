@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# This script generates an MSI file for Yggdrasil for a given architecture. It
+# This script generates an MSI file for Ruvmeshnet for a given architecture. It
 # needs to run on Windows within MSYS2 and Go 1.17 or later must be installed on
 # the system and within the PATH. This is ran currently by GitHub Actions (see
 # the workflows in the repository).
@@ -31,7 +31,7 @@ then
   )
 fi
 
-# Build Yggdrasil!
+# Build Ruvmeshnet!
 [ "${PKGARCH}" == "x64" ] && GOOS=windows GOARCH=amd64 CGO_ENABLED=0 ./build
 [ "${PKGARCH}" == "x86" ] && GOOS=windows GOARCH=386 CGO_ENABLED=0 ./build
 [ "${PKGARCH}" == "arm" ] && GOOS=windows GOARCH=arm CGO_ENABLED=0 ./build
@@ -39,12 +39,12 @@ fi
 
 # Create the postinstall script
 cat > updateconfig.bat << EOF
-if not exist %ALLUSERSPROFILE%\\Yggdrasil (
-  mkdir %ALLUSERSPROFILE%\\Yggdrasil
+if not exist %ALLUSERSPROFILE%\\Ruvmeshnet (
+  mkdir %ALLUSERSPROFILE%\\Ruvmeshnet
 )
-if not exist %ALLUSERSPROFILE%\\Yggdrasil\\yggdrasil.conf (
-  if exist yggdrasil.exe (
-    yggdrasil.exe -genconf > %ALLUSERSPROFILE%\\Yggdrasil\\yggdrasil.conf
+if not exist %ALLUSERSPROFILE%\\Ruvmeshnet\\ruvmeshnet.conf (
+  if exist ruvmeshnet.exe (
+    ruvmeshnet.exe -genconf > %ALLUSERSPROFILE%\\Ruvmeshnet\\ruvmeshnet.conf
   )
 )
 EOF
@@ -77,9 +77,9 @@ else
 fi
 
 if [ $PKGNAME != "master" ]; then
-  PKGDISPLAYNAME="Yggdrasil Network (${PKGNAME} branch)"
+  PKGDISPLAYNAME="Ruvmeshnet Network (${PKGNAME} branch)"
 else
-  PKGDISPLAYNAME="Yggdrasil Network"
+  PKGDISPLAYNAME="Ruvmeshnet Network"
 fi
 
 # Generate the wix.xml file
@@ -93,14 +93,14 @@ cat > wix.xml << EOF
     Language="1033"
     Codepage="1252"
     Version="${PKGVERSIONMS}"
-    Manufacturer="github.com/yggdrasil-network">
+    Manufacturer="github.com/ruvcoindev/ruvmeshnet/">
 
     <Package
       Id="*"
       Keywords="Installer"
-      Description="Yggdrasil Network Installer"
-      Comments="Yggdrasil Network standalone router for Windows."
-      Manufacturer="github.com/yggdrasil-network"
+      Description="Ruvmeshnet Network Installer"
+      Comments="Ruvmeshnet Network standalone router for Windows."
+      Manufacturer="github.com/ruvcoindev/ruvmeshnet/"
       InstallerVersion="200"
       InstallScope="perMachine"
       Languages="1033"
@@ -118,14 +118,14 @@ cat > wix.xml << EOF
 
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="${PKGINSTFOLDER}" Name="PFiles">
-        <Directory Id="YggdrasilInstallFolder" Name="Yggdrasil">
+        <Directory Id="RuvmeshnetInstallFolder" Name="Ruvmeshnet">
 
           <Component Id="MainExecutable" Guid="c2119231-2aa3-4962-867a-9759c87beb24">
             <File
-              Id="Yggdrasil"
-              Name="yggdrasil.exe"
+              Id="Ruvmeshnet"
+              Name="ruvmeshnet.exe"
               DiskId="1"
-              Source="yggdrasil.exe"
+              Source="ruvmeshnet.exe"
               KeyPath="yes" />
 
             <File
@@ -137,19 +137,19 @@ cat > wix.xml << EOF
             <ServiceInstall
               Id="ServiceInstaller"
               Account="LocalSystem"
-              Description="Yggdrasil Network router process"
-              DisplayName="Yggdrasil Service"
+              Description="Ruvmeshnet Network router process"
+              DisplayName="Ruvmeshnet Service"
               ErrorControl="normal"
               LoadOrderGroup="NetworkProvider"
-              Name="Yggdrasil"
+              Name="Ruvmeshnet"
               Start="auto"
               Type="ownProcess"
-              Arguments='-useconffile "%ALLUSERSPROFILE%\\Yggdrasil\\yggdrasil.conf" -logto "%ALLUSERSPROFILE%\\Yggdrasil\\yggdrasil.log"'
+              Arguments='-useconffile "%ALLUSERSPROFILE%\\Ruvmeshnet\\ruvmeshnet.conf" -logto "%ALLUSERSPROFILE%\\Ruvmeshnet\\ruvmeshnet.log"'
               Vital="yes" />
 
             <ServiceControl
               Id="ServiceControl"
-              Name="yggdrasil"
+              Name="ruvmeshnet"
               Start="install"
               Stop="both"
               Remove="uninstall" />
@@ -157,10 +157,10 @@ cat > wix.xml << EOF
 
           <Component Id="CtrlExecutable" Guid="a916b730-974d-42a1-b687-d9d504cbb86a">
             <File
-              Id="Yggdrasilctl"
-              Name="yggdrasilctl.exe"
+              Id="Ruvmeshnetctl"
+              Name="ruvmeshnetctl.exe"
               DiskId="1"
-              Source="yggdrasilctl.exe"
+              Source="ruvmeshnetctl.exe"
               KeyPath="yes"/>
           </Component>
 
@@ -176,7 +176,7 @@ cat > wix.xml << EOF
       </Directory>
     </Directory>
 
-    <Feature Id="YggdrasilFeature" Title="Yggdrasil" Level="1">
+    <Feature Id="RuvmeshnetFeature" Title="Ruvmeshnet" Level="1">
       <ComponentRef Id="MainExecutable" />
       <ComponentRef Id="CtrlExecutable" />
       <ComponentRef Id="ConfigScript" />
@@ -184,7 +184,7 @@ cat > wix.xml << EOF
 
     <CustomAction
       Id="UpdateGenerateConfig"
-      Directory="YggdrasilInstallFolder"
+      Directory="RuvmeshnetInstallFolder"
       ExeCommand="cmd.exe /c updateconfig.bat"
       Execute="deferred"
       Return="check"
