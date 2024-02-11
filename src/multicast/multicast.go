@@ -15,7 +15,7 @@ import (
 	"github.com/gologme/log"
 
 	"github.com/ruvcoindev/ruvmeshnet/src/core"
-	"golang.org/x/crypto/sha3"
+	"golang.org/x/crypto/blake2b"
 	"golang.org/x/net/ipv6"
 )
 
@@ -199,7 +199,7 @@ func (m *Multicast) _getAllowedInterfaces() map[string]*interfaceInfo {
 			if !ifcfg.Regex.MatchString(iface.Name) {
 				continue
 			}
-			hasher, err := sha3.New512([]byte(ifcfg.Password))
+			hasher, err := blake2b.New512([]byte(ifcfg.Password))
 			if err != nil {
 				continue
 			}
@@ -373,7 +373,7 @@ func (m *Multicast) listen() {
 		panic(err)
 	}
 	bs := make([]byte, 2048)
-	hb := make([]byte, 0, sha3.Size) // Reused to reduce hash allocations
+	hb := make([]byte, 0, blake2b.Size) // Reused to reduce hash allocations
 	for {
 		n, rcm, fromAddr, err := m.sock.ReadFrom(bs)
 		if err != nil {
@@ -412,7 +412,7 @@ func (m *Multicast) listen() {
 			interfaces = m._interfaces
 		})
 		if info, ok := interfaces[from.Zone]; ok && info.listen {
-			hasher, err := sha3.New512(info.password)
+			hasher, err := blake2b.New512(info.password)
 			if err != nil {
 				continue
 			}
