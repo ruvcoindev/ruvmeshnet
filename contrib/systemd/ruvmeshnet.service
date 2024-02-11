@@ -1,18 +1,18 @@
 [Unit]
-Description=yggdrasil
+Description=ruvmeshnet
 Wants=network-online.target
-Wants=yggdrasil-default-config.service
+Wants=ruvmeshnet-default-config.service
 After=network-online.target
-After=yggdrasil-default-config.service
+After=ruvmeshnet-default-config.service
 
 [Service]
-Group=yggdrasil
+Group=ruvmeshnet
 ProtectHome=true
 ProtectSystem=true
-SyslogIdentifier=yggdrasil
+SyslogIdentifier=ruvmeshnet
 CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 ExecStartPre=+-/sbin/modprobe tun
-ExecStart=/usr/bin/yggdrasil -useconffile /etc/yggdrasil.conf
+ExecStart=/usr/bin/ruvmeshnet -useconffile /etc/ruvmeshnet.conf
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=always
 TimeoutStopSec=5

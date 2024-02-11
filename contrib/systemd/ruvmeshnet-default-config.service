@@ -1,0 +1,13 @@
+[Unit]
+Description=ruvmeshnet default config generator
+ConditionPathExists=|!/etc/ruvmeshnet.conf
+ConditionFileNotEmpty=|!/etc/ruvmeshnet.conf
+Wants=local-fs.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+Group=ruvmeshnet
+StandardOutput=file:/etc/ruvmeshnet.conf
+ExecStart=/usr/bin/ruvmeshnet -genconf
+ExecStartPost=/usr/bin/chmod 0640 /etc/ruvmeshnet.conf
