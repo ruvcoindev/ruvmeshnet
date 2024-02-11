@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/yggdrasil-network/yggdrasil-go/src/address"
+	"github.com/ruvcoindev/ruvmeshnet/src/address"
 )
 
 type GetTreeRequest struct{}
