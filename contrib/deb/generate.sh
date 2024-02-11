@@ -22,7 +22,7 @@ if [ $PKGBRANCH = "master" ]; then
 fi
 
 GOLDFLAGS="-X github.com/ruvcoindev/ruvmeshnet/src/config.defaultConfig=/etc/ruvmeshnet/ruvmeshnet.conf"
-GOLDFLAGS="${GOLDFLAGS} -X github.com/ruvcoindev/ruvmeshnet/src/config.defaultAdminListen=unix:///var/run/ruvmeshnet/ruvmeshnet.sock"
+GOLDFLAGS="${GOLDFLAGS} -X github.com/ruvcoindev/ruvmeshnet/src/config.defaultAdminListen=unix:///var/run/ruvmeshnet/ruv.sock"
 
 if [ $PKGARCH = "amd64" ]; then GOARCH=amd64 GOOS=linux ./build -l "${GOLDFLAGS}"
 elif [ $PKGARCH = "i386" ]; then GOARCH=386 GOOS=linux ./build -l "${GOLDFLAGS}"
