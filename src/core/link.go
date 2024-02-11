@@ -15,8 +15,8 @@ import (
 	"time"
 
 	"github.com/Arceliar/phony"
-	"github.com/yggdrasil-network/yggdrasil-go/src/address"
-	"golang.org/x/crypto/blake2b"
+	"github.com/ruvcoindev/ruvmeshnet/src/address"
+	"golang.org/x/crypto/sha3"
 )
 
 type linkType int
@@ -442,7 +442,7 @@ func (l *links) listen(u *url.URL, sintf string) (*Listener, error) {
 		options.priority = uint8(pi)
 	}
 	if p := u.Query().Get("password"); p != "" {
-		if len(p) > blake2b.Size {
+		if len(p) > sha3.Size {
 			return nil, ErrLinkPasswordInvalid
 		}
 		options.password = []byte(p)

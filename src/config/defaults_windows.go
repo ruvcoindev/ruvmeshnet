@@ -8,10 +8,10 @@ package config
 func getDefaults() platformDefaultParameters {
 	return platformDefaultParameters{
 		// Admin
-		DefaultAdminListen: "tcp://localhost:9001",
+		DefaultAdminListen: "tcp://localhost:9090",
 
-		// Configuration (used for yggdrasilctl)
-		DefaultConfigFile: "C:\\Program Files\\Yggdrasil\\yggdrasil.conf",
+		// Configuration (used for ruvmeshnetctl)
+		DefaultConfigFile: "C:\\Program Files\\Ruvmeshnet\\ruvmeshnet.conf",
 
 		// Multicast interfaces
 		DefaultMulticastInterfaces: []MulticastInterfaceConfig{
@@ -21,6 +21,6 @@ func getDefaults() platformDefaultParameters {
 		// TUN
 		MaximumIfMTU:  65535,
 		DefaultIfMTU:  65535,
-		DefaultIfName: "Yggdrasil",
+		DefaultIfName: "Ruvmeshnet",
 	}
 }
